@@ -1,0 +1,45 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/n2NN-rvGsmZ5EcycKqD_QUzZhUE\"",
+  "nextPageToken": "CAIQAA",
+  "regionCode": "MA",
+  "pageInfo": {
+    "totalResults": 1,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/PFSuySCV0ULhx0IcFgxd5EcPZng\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "Nt9L1jCKGnE"
+      },
+      "snippet": {
+        "publishedAt": "2019-05-06T13:00:32.000Z",
+        "channelId": "UCz97F7dMxBNOfGYu3rx8aCw",
+        "title": "SPIDER-MAN: FAR FROM HOME - Official Trailer",
+        "description": "[SPOILERS AHEAD] ⚠   It's time to step up. Watch the new #SpiderManFarFromHome trailer now and get your tickets today: https://bit.ly/FarFromHomeTix ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Nt9L1jCKGnE/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Nt9L1jCKGnE/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Nt9L1jCKGnE/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Sony Pictures Entertainment",
+        "liveBroadcastContent": "none"
+      }
+    }
+  ]
+}
