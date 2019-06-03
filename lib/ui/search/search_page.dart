@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube_search_bloc/data/model/search/search_item.dart';
+import 'package:flutter_youtube_search_bloc/data/model/search/search_snippet.dart';
 import 'package:flutter_youtube_search_bloc/ui/search/search_bloc.dart';
 import 'package:flutter_youtube_search_bloc/ui/search/search_state.dart';
 import 'package:flutter_youtube_search_bloc/ui/search/widget/centered_message.dart';
@@ -14,7 +16,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final _searchBloc = kiwi.Container().resolve<SearchBloc>();
-  final _searchController = ScrollController();
+  final _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +46,92 @@ class _SearchPageState extends State<SearchPage> {
                 icon: Icons.ondemand_video,
               );
             }
+
+            if (state.isLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            if (state.isSuccessful) {
+              return _buildResultList(state);
+            } else {
+              return CenteredMessage(
+                message: state.error,
+                icon: Icons.error_outline,
+              );
+            }
           }),
     );
   }
+
+  Widget _buildResultList(SearchState state) {
+    return NotificationListener<ScrollNotification>(
+      onNotification: _handleScrollNotification,
+      child: ListView.builder(
+        itemCount: _calculateListItemCount(state),
+          controller: _scrollController,
+          itemBuilder: (context, index) {
+            return index >= state.searchResults.length
+                ? _buildLoaderListItem()
+                : _buildVideoListItemCard(state.searchResults[index].snippet);
+          }
+      ),
+    );
+  }
+
+  Widget _buildVideoListItemCard(SearchSnippet videoSnippet) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.network(
+                videoSnippet.thumbnails.high.url,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              videoSnippet.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(videoSnippet.description)
+          ],
+        ),
+      ),
+    );
+  }
+
+  int _calculateListItemCount(SearchState state) {
+    if (state.hasReachedEndOfResults) {
+      return state.searchResults.length;
+    } else {
+      return state.searchResults.length + 1;
+    }
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification is ScrollEndNotification && _scrollController.position.extentAfter == 0) {
+      _searchBloc.fetchNextResultPage();
+    }
+    return false;
+  }
+
+  Widget _buildLoaderListItem() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
 }
 
 
