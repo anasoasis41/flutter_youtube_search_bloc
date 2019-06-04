@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_youtube_search_bloc/data/model/detail/youtube_video_error.dart';
+import 'package:flutter_youtube_search_bloc/data/model/detail/youtube_video_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_youtube_search_bloc/data/model/search/model_search.dart';
 import 'api_key.dart';
@@ -14,6 +16,9 @@ class YoutubeDataSource {
   final String _searchBaseUrl =
       'https://www.googleapis.com/youtube/v3/search?part=snippet' +
           '&maxResults=$MAX_SEARCH_RESULTS&type=video&key=$API_KEY';
+
+  final String _videoBaseUrl =
+      'https://www.googleapis.com/youtube/v3/videos?part=snippet&key=$API_KEY';
 
   YoutubeDataSource(this.client);
 
@@ -35,4 +40,30 @@ class YoutubeDataSource {
     }
   }
 
+  Future<YoutubeVideoResponse> fetchVideoInfo({String id}) async {
+    final url = _videoBaseUrl + '&id=$id';
+    final response = await client.get(url);
+
+    if (response.statusCode == 200) {
+      return YoutubeVideoResponse.fromJson(response.body);
+    } else {
+      throw YoutubeVideoError(json.decode(response.body)['error']['message']);
+    }
+  }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
